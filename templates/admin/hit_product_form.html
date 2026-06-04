@@ -1,0 +1,79 @@
+﻿﻿<form method="post" enctype="multipart/form-data" action="{{ url_for('add_hit_product') if not product else url_for('edit_hit_product', id=product.id) }}">
+    <div class="form-group">
+        <label class="form-label">Название товара</label>
+        <input type="text" name="name" class="form-control" value="{{ product.name if product else '' }}" required>
+    </div>
+    
+    <div class="form-group">
+        <label class="form-label">Цена без скидки (руб.)</label>
+        <input type="number" name="price_old" class="form-control" value="{{ product.price_old if product else '' }}" required step="1">
+    </div>
+    
+    <div class="form-group">
+        <label class="form-label">Скидка (%)</label>
+        <input type="number" name="discount" class="form-control" value="{{ product.discount if product else '0' }}" required step="5" min="0" max="90">
+    </div>
+    
+    <div class="form-group">
+        <label class="form-label">Изображение</label>
+    
+        <!-- Область для предпросмотра -->
+        <div id="previewArea" style="margin-bottom: 12px;">
+            {% if product and product.image_filename %}
+                <div id="currentImage">
+                    <img src="/static/{{ product.image_filename }}" style="max-width: 100%; max-height: 120px; width: auto; height: auto; border-radius: 8px; border: 1px solid #e5e7eb;">
+                </div>
+            {% endif %}
+            <div id="previewNew" style="display: none;">
+                <img id="newImage" style="max-width: 100%; max-height: 120px; width: auto; height: auto; border-radius: 8px; border: 1px solid #e5e7eb;">
+            </div>
+        </div>
+    
+        <!-- Кнопка выбора файла -->
+        <div style="display: inline-block; position: relative;">
+            <button type="button" onclick="document.getElementById('fileInput').click()" style="background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 8px; padding: 8px 16px; color: #374151; font-size: 14px; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">
+                📁 Выберите файл
+            </button>
+            <input type="file" name="image" id="fileInput" style="display: none;" accept="image/*" onchange="handleFileSelect(this)">
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="form-label">Порядок сортировки</label>
+        <input type="number" name="sort_order" class="form-control" value="{{ product.sort_order if product else 0 }}" step="1">
+        <p style="font-size: 12px; color: #6c757d; margin-top: 4px;">Чем меньше число, тем выше в списке</p>
+    </div>
+    
+    <div style="display: flex; gap: 12px; justify-content: center; margin-top: 24px;">
+        <button type="submit" style="background: rgba(19, 77, 113, 0.5); border: none; border-radius: 8px; padding: 8px 20px; color: white; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(19, 77, 113, 0.7)'" onmouseout="this.style.background='rgba(19, 77, 113, 0.5)'">
+            💾 Сохранить
+        </button>
+    </div>
+</form>
+
+<style>
+    /* Адаптация формы для мобильных устройств */
+    @media (max-width: 480px) {
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-label {
+            font-size: 13px;
+        }
+        .form-control {
+            padding: 8px 12px;
+            font-size: 13px;
+        }
+        #previewArea img {
+            max-height: 100px !important;
+        }
+        button[type="submit"] {
+            padding: 10px 16px;
+            font-size: 14px;
+        }
+        .btn-secondary {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+    }
+</style>

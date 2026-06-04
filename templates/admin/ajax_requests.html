@@ -1,0 +1,222 @@
+﻿﻿<div class="card">
+    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+        <h2 class="card-title" style="margin-bottom: 0;">Заявки от клиентов</h2>
+        {% if requests %}
+        <button onclick="confirmDeleteAllRequests()" style="color: black; text-decoration: underline; font-size: 15px; font-weight: 500; cursor: pointer; background: none; border: none; padding: 0; line-height: normal;">
+            Удалить все заявки
+        </button>
+        {% endif %}
+    </div>
+    
+    {% if requests %}
+    
+    <!-- ДЕСКТОПНАЯ ВЕРСИЯ (таблица) -->
+    <div class="desktop-view">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 5%;">ID</th>
+                    <th style="width: 15%;">Телефон</th>
+                    <th style="width: 20%;">Марка авто / VIN</th>
+                    <th style="width: 35%;">Запчасти</th>
+                    <th style="width: 15%;">Дата</th>
+                    <th style="width: 10%; text-align: center;">Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for req in requests %}
+                <tr>
+                    <td>{{ req.id }}</td>
+                    <td><a href="tel:{{ req.phone }}" style="color: #b22234; text-decoration: none;">{{ req.phone }}</a></td>
+                    <td>{{ req.car_info }}</td>
+                    <td style="word-break: break-word; white-space: normal;">{{ req.parts_needed }}</td>
+                    <td>{% if req.created_at %}{{ req.created_at.strftime('%d.%m.%Y %H:%M') }}{% else %}—{% endif %}</td>
+                    <td style="text-align: center;">
+                        <button onclick="confirmDeleteRequest('/admin/request/delete/{{ req.id }}', 'заявку от {{ req.phone }}')" 
+                             style="background: rgba(19, 77, 113, 0.5); border: none; border-radius: 6px; padding: 4px 8px; cursor: pointer; color: white; font-size: 14px; transition: background 0.2s;"
+                             onmouseover="this.style.background='rgba(19, 77, 113, 0.7)'"
+                             onmouseout="this.style.background='rgba(19, 77, 113, 0.5)'">
+                             <i class="fas fa-trash-can"></i>
+                         </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- МОБИЛЬНАЯ ВЕРСИЯ (раскрывающиеся карточки) -->
+    <div class="mobile-view">
+        {% for req in requests %}
+        <div class="mobile-request-card" data-id="{{ req.id }}">
+            <div class="request-header" onclick="toggleRequest(this)">
+                <div class="request-info">
+                    <span class="request-id">№ {{ req.id }}</span>
+                    <span class="request-car">{{ req.car_info|truncate(30) }}</span>
+                </div>
+                <div class="request-actions">
+                    <button onclick="event.stopPropagation(); confirmDeleteRequest('/admin/request/delete/{{ req.id }}', 'заявку от {{ req.phone }}')" 
+                         style="background: rgba(19, 77, 113, 0.5); border: none; border-radius: 6px; padding: 4px 8px; cursor: pointer; color: white; font-size: 14px; transition: background 0.2s;"
+                         onmouseover="this.style.background='rgba(19, 77, 113, 0.7)'"
+                         onmouseout="this.style.background='rgba(19, 77, 113, 0.5)'">
+                        <i class="fas fa-trash-can"></i>
+                    </button>
+                    <span class="toggle-icon">▼</span>
+                </div>
+            </div>
+            <div class="request-details" style="display: none;">
+                <div class="detail-section">
+                    <div class="detail-label">📞 Телефон:</div>
+                    <div class="detail-value"><a href="tel:{{ req.phone }}">{{ req.phone }}</a></div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">🚗 Марка авто / VIN:</div>
+                    <div class="detail-value">{{ req.car_info }}</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">📋 Запчасти:</div>
+                    <div class="detail-value">{{ req.parts_needed }}</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">📅 Дата:</div>
+                    <div class="detail-value">{% if req.created_at %}{{ req.created_at.strftime('%d.%m.%Y %H:%M') }}{% else %}—{% endif %}</div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    {% else %}
+    <div style="text-align: center; padding: 60px 20px; color: #9ca3af;">
+        <img src="/static/empty-requests.png" alt="Нет заявок" style="width: 100px; height: auto; margin-bottom: 16px; opacity: 0.6;">
+        <p>Нет заявок от клиентов</p>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    /* По умолчанию (мобильная версия) */
+    .desktop-view {
+        display: none;
+    }
+    .mobile-view {
+        display: block;
+    }
+    
+    /* Десктопная версия (от 768px и шире) */
+    @media (min-width: 768px) {
+        .desktop-view {
+            display: block;
+        }
+        .mobile-view {
+            display: none;
+        }
+    }
+    
+    /* Остальные стили для мобильных карточек (без изменений) */
+    .mobile-request-card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        margin-bottom: 12px;
+        overflow: hidden;
+        transition: all 0.2s;
+    }
+    
+    .request-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 16px;
+        cursor: pointer;
+        background: #f9fafb;
+        transition: background 0.2s;
+    }
+    
+    .request-header:hover {
+        background: #f3f4f6;
+    }
+    
+    .request-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        flex: 1;
+    }
+    
+    .request-id {
+        font-weight: 600;
+        color: #b22234;
+        font-size: 13px;
+    }
+    
+    .request-car {
+        font-size: 14px;
+        color: #374151;
+        word-break: break-word;
+    }
+    
+    .request-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .toggle-icon {
+        font-size: 14px;
+        color: #6b7280;
+        cursor: pointer;
+        transition: transform 0.2s;
+        min-width: 20px;
+        text-align: center;
+    }
+    
+    .request-details {
+        padding: 12px 16px;
+        background: white;
+        border-top: 1px solid #e5e7eb;
+    }
+    
+    .detail-section {
+        margin-bottom: 14px;
+    }
+    
+    .detail-section:last-child {
+        margin-bottom: 0;
+    }
+    
+    .detail-label {
+        font-weight: 600;
+        color: #4b5563;
+        font-size: 12px;
+        margin-bottom: 4px;
+    }
+    
+    .detail-value {
+        color: #111827;
+        font-size: 13px;
+        line-height: 1.5;
+        word-break: break-word;
+        white-space: normal;
+    }
+    
+    .detail-value a {
+        color: #b22234;
+        text-decoration: none;
+    }
+    
+    @media (max-width: 480px) {
+        .request-details {
+            padding: 10px 12px;
+        }
+        .detail-section {
+            margin-bottom: 10px;
+        }
+        .detail-label {
+            font-size: 11px;
+        }
+        .detail-value {
+            font-size: 12px;
+        }
+    }
+</style>

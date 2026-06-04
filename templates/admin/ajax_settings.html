@@ -1,0 +1,345 @@
+﻿<form method="post" enctype="multipart/form-data" id="settingsForm" action="/admin/ajax/settings">
+
+<!-- Блок 1: ШАПКА САЙТА -->
+<div class="card" style="margin-bottom: 24px;">
+    <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 20px; color: #111827;">Шапка сайта</h3>
+    
+    <!-- Две карточки в ряд (на мобильных вертикально) -->
+    <div class="settings-two-columns" style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 30px;">
+        
+        <!-- Карточка: Логотип -->
+        <div style="flex: 1; min-width: 200px; max-width: 100%; width: 100%;">
+            <div style="font-weight: 500; margin-bottom: 8px; color: #374151;">Логотип</div>
+            <div style="border: 1px solid #d1d5db; border-radius: 12px; padding: 16px; background: white; word-wrap: break-word; overflow-wrap: break-word;">
+                
+                <div id="logoPreviewArea" style="margin-bottom: 12px;">
+                    {% if logo_filename %}
+                        <div id="currentLogoBlock">
+                            <img src="/static/{{ logo_filename }}" alt="Текущий логотип" style="max-height: 80px; border-radius: 8px; max-width: 100%; height: auto;">
+                        </div>
+                    {% else %}
+                        <p id="noLogoText" style="color: #9ca3af; margin: 8px 0;">Логотип не загружен</p>
+                    {% endif %}
+                    
+                    <div id="previewBlock" style="display: none; margin-top: 10px;">
+                        <img id="logoPreview" src="#" alt="Предпросмотр" style="max-height: 80px; border: 1px solid #134D71; border-radius: 8px; padding: 2px; max-width: 100%; height: auto;">
+                        <br>
+                        <button type="button" onclick="cancelPreview()" class="btn btn-secondary btn-sm" style="margin-top: 6px;">Отменить</button>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 12px;">
+                    <div style="display: inline-block; position: relative;">
+                        <button type="button" onclick="document.getElementById('logoInput').click()" style="background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 8px; padding: 6px 12px; color: #374151; font-size: 13px; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">
+                            📁 Выбрать логотип
+                        </button>
+                        <input type="file" name="logo" id="logoInput" style="display: none;" accept="image/png, image/jpeg, image/jpg, image/gif" onchange="previewLogo(event)">
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 12px;">
+                    <label class="form-label">Размер (px):</label>
+                    <input type="number" name="logo_width" value="{{ logo_width }}" min="50" max="500" step="10" style="width: 120px; max-width: 100%; display: block;">
+                    <p style="font-size: 11px; color: #6c757d; margin-top: 2px;">Минимум 50px, максимум 500px. Рекомендуем 150-250px</p>
+                </div>
+                
+                <div style="margin-bottom: 12px;">
+                    <label class="form-label" style="margin-bottom: 4px; display: block;">Расположение:</label>
+                    <div class="logo-alignment-options" style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <label style="display: inline-flex; align-items: center; gap: 4px;">
+                            <input type="radio" name="logo_alignment" value="center" {% if logo_alignment == 'center' %}checked{% endif %}> По центру
+                        </label>
+                        <label style="display: inline-flex; align-items: center; gap: 4px;">
+                            <input type="radio" name="logo_alignment" value="left" {% if logo_alignment == 'left' %}checked{% endif %}> Слева
+                        </label>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid #e5e7eb;">
+                    {% if logo_filename %}
+                        <label style="font-size: 13px;">
+                            <input type="checkbox" name="delete_logo" value="yes"> Удалить логотип
+                        </label>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Карточка: Телефон и иконка -->
+        <div style="flex: 1; min-width: 200px; max-width: 100%; width: 100%;">
+            <div style="font-weight: 500; margin-bottom: 8px; color: #374151;">Телефон и иконка</div>
+            <div style="border: 1px solid #d1d5db; border-radius: 12px; padding: 16px; background: white; word-wrap: break-word; overflow-wrap: break-word;">
+                
+                <div id="phoneIconPreviewArea" style="margin-bottom: 12px;">
+                    {% if phone_icon_filename %}
+                        <div id="currentPhoneIconBlock">
+                            <img src="/static/{{ phone_icon_filename }}" alt="Текущая иконка" style="max-height: 40px; max-width: 100%; height: auto;">
+                        </div>
+                    {% else %}
+                        <p id="noPhoneIconText" style="color: #9ca3af; margin: 8px 0;">Иконка не загружена (будет 📞)</p>
+                    {% endif %}
+                    
+                    <div id="phonePreviewBlock" style="display: none; margin-top: 10px;">
+                        <img id="phoneIconPreview" src="#" alt="Предпросмотр" style="max-height: 40px; border: 1px solid #134D71; border-radius: 6px; padding: 2px; max-width: 100%; height: auto;">
+                        <br>
+                        <button type="button" onclick="cancelPhonePreview()" class="btn btn-secondary btn-sm" style="margin-top: 6px;">Отменить</button>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 12px;">
+                    <div style="display: inline-block; position: relative;">
+                        <button type="button" onclick="document.getElementById('phoneIconInput').click()" style="background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 8px; padding: 6px 12px; color: #374151; font-size: 13px; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">
+                            📁 Выбрать иконку
+                        </button>
+                        <input type="file" name="phone_icon" id="phoneIconInput" style="display: none;" accept="image/png, image/jpeg, image/jpg, image/gif" onchange="previewPhoneIcon(event)">
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 12px;">
+                    <label class="form-label">Размер (px):</label>
+                    <input type="number" name="phone_icon_width" value="{{ phone_icon_width }}" min="16" max="48" step="2" style="width: 100px; max-width: 100%; display: block;">
+                    <p style="font-size: 11px; color: #6c757d; margin-top: 2px;">Рекомендуем 20-32px</p>
+                </div>
+                
+                <div style="margin-bottom: 12px;">
+                    <label class="form-label">Номер телефона:</label>
+                    <input type="text" name="phone_number" value="{{ phone_number }}" style="width: 100%; box-sizing: border-box;" placeholder="+7 (4852) 28-24-28">
+                </div>
+                
+                <div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid #e5e7eb;">
+                    {% if phone_icon_filename %}
+                        <label style="font-size: 13px;">
+                            <input type="checkbox" name="delete_phone_icon" value="yes"> Удалить иконку
+                        </label>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Текст шапки -->
+    <div>
+        <div style="margin-bottom: 15px;">
+            <label class="form-label">Заголовок:</label>
+    
+            <!-- Десктопная версия (input) -->
+            <input type="text" name="shop_title_desktop" value="{{ shop_title }}" class="desktop-input" style="width: 100%; box-sizing: border-box;">
+    
+            <!-- Мобильная версия (textarea) -->
+            <textarea name="shop_title_mobile" class="mobile-textarea" style="width: 100%; box-sizing: border-box; min-height: 70px; resize: vertical; padding: 10px; line-height: 1.4;">{{ shop_title }}</textarea>
+    
+            <!-- Скрытое поле — именно его значение отправится на сервер -->
+            <input type="hidden" name="shop_title" value="{{ shop_title }}" id="shop_title_hidden">
+        </div>
+        <div>
+            <label class="form-label">Подзаголовок:</label>
+    
+            <!-- Десктопная версия (input) -->
+            <input type="text" name="shop_subtitle_desktop" value="{{ shop_subtitle }}" class="desktop-input" style="width: 100%; box-sizing: border-box;">
+    
+            <!-- Мобильная версия (textarea) -->
+            <textarea name="shop_subtitle_mobile" class="mobile-textarea" style="width: 100%; box-sizing: border-box; min-height: 70px; resize: vertical; padding: 10px; line-height: 1.4;">{{ shop_subtitle }}</textarea>
+    
+            <!-- Скрытое поле -->
+            <input type="hidden" name="shop_subtitle" value="{{ shop_subtitle }}" id="shop_subtitle_hidden">
+        </div>
+    </div>
+</div>
+
+<!-- Блок 2: ФУТЕР -->
+<div class="card" style="margin-bottom: 24px;">
+    <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 20px; color: #111827;">Футер</h3>
+    
+    <div style="margin-bottom: 15px;">
+        <label class="form-label">Адрес магазина:</label>
+    
+        <!-- Десктопная версия (input) -->
+        <input type="text" name="shop_address_desktop" value="{{ shop_address }}" class="desktop-input" style="width: 100%; box-sizing: border-box;" placeholder="г. Ярославль, Ленинградский проспект 47">
+    
+        <!-- Мобильная версия (textarea) -->
+        <textarea name="shop_address_mobile" class="mobile-textarea" style="width: 100%; box-sizing: border-box; min-height: 70px; resize: vertical; padding: 10px; line-height: 1.4;" placeholder="г. Ярославль, Ленинградский проспект 47">{{ shop_address }}</textarea>
+    
+        <!-- Скрытое поле -->
+        <input type="hidden" name="shop_address" value="{{ shop_address }}" id="shop_address_hidden">
+    </div>
+    
+    <div style="margin-bottom: 15px;">
+        <label class="form-label">Часы работы:</label>
+    
+        <!-- Десктопная версия (input) -->
+        <input type="text" name="work_hours_desktop" value="{{ work_hours }}" class="desktop-input" style="width: 100%; box-sizing: border-box;" placeholder="ПН–ПТ 10:00–18:30 | Сб 10:00–15:00">
+    
+        <!-- Мобильная версия (textarea) -->
+        <textarea name="work_hours_mobile" class="mobile-textarea" style="width: 100%; box-sizing: border-box; min-height: 70px; resize: vertical; padding: 10px; line-height: 1.4;" placeholder="ПН–ПТ 10:00–18:30 | Сб 10:00–15:00">{{ work_hours }}</textarea>
+    
+        <!-- Скрытое поле -->
+        <input type="hidden" name="work_hours" value="{{ work_hours }}" id="work_hours_hidden">
+    </div>
+    
+    <div>
+        <label class="form-label" style="margin-bottom: 4px; display: block;">Карта на сайте:</label>
+        <div class="radio-vertical-group" style="display: flex; gap: 15px; flex-wrap: wrap;">
+            <label style="display: inline-flex; align-items: center; gap: 4px;">
+                <input type="radio" name="show_map" value="yes" {% if show_map == 'yes' %}checked{% endif %}> Да, показывать
+            </label>
+            <label style="display: inline-flex; align-items: center; gap: 4px;">
+                <input type="radio" name="show_map" value="no" {% if show_map == 'no' %}checked{% endif %}> Нет, скрыть
+            </label>
+        </div>
+    </div>
+</div>
+
+<!-- Блок 3: ГОРИЗОНТАЛЬНЫЙ ВИДЖЕТ -->
+<div class="card" style="margin-bottom: 24px;">
+    <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 20px; color: #111827;">Горизонтальный виджет</h3>
+    
+    <div style="margin-bottom: 15px;">
+        <label class="form-label">Заголовок блока:</label>
+    
+        <!-- Десктопная версия (input) -->
+        <input type="text" name="hit_block_title_desktop" value="{{ hit_block_title }}" class="desktop-input" style="width: 100%; box-sizing: border-box;" placeholder="⭐ ХИТ продаж">
+    
+        <!-- Мобильная версия (textarea) -->
+        <textarea name="hit_block_title_mobile" class="mobile-textarea" style="width: 100%; box-sizing: border-box; min-height: 70px; resize: vertical; padding: 10px; line-height: 1.4;" placeholder="⭐ ХИТ продаж">{{ hit_block_title }}</textarea>
+    
+        <!-- Скрытое поле -->
+        <input type="hidden" name="hit_block_title" value="{{ hit_block_title }}" id="hit_block_title_hidden">
+    </div>
+    
+    <div style="margin-bottom: 10px;">
+        <div class="radio-vertical-group" style="display: flex; gap: 60px; flex-wrap: wrap;">
+            <label style="display: inline-flex; align-items: center; gap: 4px;">
+                <input type="radio" name="show_hit_block" value="yes" {% if show_hit_block == 'yes' %}checked{% endif %}> Показывать блок
+            </label>
+            <label style="display: inline-flex; align-items: center; gap: 4px;">
+                <input type="radio" name="show_hit_block" value="no" {% if show_hit_block == 'no' %}checked{% endif %}> Скрыть блок
+            </label>
+        </div>
+    </div>
+
+    <div>
+        <div class="radio-vertical-group" style="display: flex; gap: 15px; flex-wrap: wrap;">
+            <label style="display: inline-flex; align-items: center; gap: 4px;">
+                <input type="radio" name="show_hit_fire" value="yes" {% if show_hit_fire == 'yes' %}checked{% endif %}> Показывать огоньки 🔥
+            </label>
+            <label style="display: inline-flex; align-items: center; gap: 4px;">
+                <input type="radio" name="show_hit_fire" value="no" {% if show_hit_fire == 'no' %}checked{% endif %}> Не показывать огоньки
+            </label>
+        </div>
+    </div>
+</div>
+
+<!-- Блок 4: ФОРМА ОБРАТНОЙ СВЯЗИ -->
+<div class="card" style="margin-bottom: 24px;">
+    <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 20px; color: #111827;">Форма обратной связи</h3>
+    
+    <label class="form-label">Заголовок формы:</label>
+
+    <!-- Десктопная версия (input) -->
+    <input type="text" name="form_title_desktop" value="{{ form_title }}" class="desktop-input" style="width: 100%; box-sizing: border-box;">
+
+    <!-- Мобильная версия (textarea) -->
+    <textarea name="form_title_mobile" class="mobile-textarea" style="width: 100%; box-sizing: border-box; min-height: 70px; resize: vertical; padding: 10px; line-height: 1.4;">{{ form_title }}</textarea>
+
+    <!-- Скрытое поле -->
+    <input type="hidden" name="form_title" value="{{ form_title }}" id="form_title_hidden">
+</div>
+
+<!-- Блок 5: EMAIL-УВЕДОМЛЕНИЯ -->
+<div class="card" style="margin-bottom: 24px;">
+    <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 20px; color: #111827;">Email-уведомления</h3>
+    
+    <div style="margin-bottom: 15px;">
+        <div class="radio-vertical-group" style="display: flex; gap: 15px; flex-wrap: wrap;">
+            <label style="display: inline-flex; align-items: center; gap: 4px;">
+                <input type="radio" name="send_email_notifications" value="yes" {% if send_email_notifications == 'yes' %}checked{% endif %}> Да, отправлять
+            </label>
+            <label style="display: inline-flex; align-items: center; gap: 4px;">
+                <input type="radio" name="send_email_notifications" value="no" {% if send_email_notifications == 'no' %}checked{% endif %}> Нет, не отправлять
+            </label>
+        </div>
+    </div>
+    
+    <div style="margin-bottom: 10px;">
+        <label class="form-label">Основной email:</label>
+        <input type="email" name="manager_email" value="{{ manager_email }}" style="width: 100%; box-sizing: border-box;" placeholder="manager@example.com">
+        <small style="font-size: 12px; color: #6c757d;">На этот адрес будут приходить уведомления</small>
+    </div>
+    
+    <div>
+        <label class="form-label">Дополнительный email:</label>
+        <input type="email" name="manager_email_extra" value="{{ manager_email_extra }}" style="width: 100%; box-sizing: border-box;" placeholder="extra@example.com">
+        <small style="font-size: 12px; color: #6c757d;">Необязательно</small>
+    </div>
+</div>
+
+<!-- Кнопка сохранения -->
+<div style="text-align: center; margin-top: 20px;">
+    <button type="submit" style="background: rgba(19, 77, 113, 0.5); border: none; border-radius: 8px; padding: 8px 20px; color: white; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(19, 77, 113, 0.7)'" onmouseout="this.style.background='rgba(19, 77, 113, 0.5)'">
+        💾 Сохранить все настройки
+    </button>
+</div>
+
+</form>
+
+<style>
+    /* Мобильная версия: радиокнопки друг под другом */
+    @media (max-width: 600px) {
+        .logo-alignment-options {
+            flex-direction: column !important;
+            gap: 8px !important;
+        }
+    }
+
+    /* Мобильная версия: все радиокнопки вертикально */
+    @media (max-width: 600px) {
+        .radio-vertical-group {
+            flex-direction: column !important;
+            gap: 8px !important;
+        }
+    }
+
+    /* Мобильная версия: карточки на всю ширину */
+    @media (max-width: 600px) {
+        .settings-two-columns {
+            flex-direction: column !important;
+        }
+    
+        .settings-two-columns > div {
+            width: 100% !important;
+            min-width: 100% !important;
+            flex: none !important;
+        }
+    }
+
+    /* Мобильная версия: поля ввода становятся высокими как textarea */
+    @media (max-width: 600px) {
+        .dynamic-field {
+            min-height: 70px !important;
+            padding: 10px !important;
+            line-height: 1.4 !important;
+            white-space: normal !important;
+            word-break: break-word !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+            resize: vertical !important;
+            display: inline-block !important;
+        }
+    }
+
+    /* По умолчанию (десктоп) — показываем input, скрываем textarea */
+    .mobile-textarea {
+        display: none;
+    }
+
+    /* На мобильных — показываем textarea, скрываем input */
+    @media (max-width: 600px) {
+        .desktop-input {
+            display: none;
+        }
+        .mobile-textarea {
+            display: block;
+        }
+    }
+
+</style>

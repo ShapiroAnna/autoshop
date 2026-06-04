@@ -1,0 +1,305 @@
+﻿<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Админ-панель - {{ title if title else 'Управление' }}</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f3f4f6;
+            color: #111827;
+        }
+        
+        /* Шапка */
+        .admin-header {
+            background: white;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+            padding: 0 20px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            gap: 15px;
+        }
+        
+        .admin-logo {
+            font-size: 14px;
+            font-weight: 500;
+            color: #172C3A;
+            white-space: nowrap;
+        }
+        
+        .admin-logout {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #172C3A;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+        
+        .admin-logout:hover {
+            background: #f3f4f6;
+        }
+        
+        .admin-logout span {
+            font-size: 16px;
+        }
+        
+        /* Адаптивность шапки для мобильных */
+        @media (max-width: 480px) {
+            .admin-header {
+                padding: 0 12px;
+                height: 50px;
+                gap: 10px;
+            }
+            .admin-logo {
+                font-size: 12px;
+            }
+            .admin-logout {
+                font-size: 12px;
+                padding: 4px 8px;
+                gap: 5px;
+            }
+            .admin-logout span {
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .admin-header {
+                padding: 0 10px;
+                gap: 8px;
+            }
+            .admin-logo {
+                font-size: 11px;
+            }
+            .admin-logout {
+                font-size: 11px;
+                padding: 4px 6px;
+            }
+        }
+        
+        /* Основной контент */
+        .admin-content {
+            flex: 1;
+            padding: 32px;
+        }
+        
+        /* Карточки */
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            border: 1px solid #e5e7eb;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        /* Кнопки */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: #b22234;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #8b1a1a;
+        }
+        
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+        
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+        
+        .btn-sm {
+            padding: 4px 12px;
+            font-size: 13px;
+        }
+        
+        /* Таблицы */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .table th {
+            text-align: left;
+            padding: 12px 16px;
+            background: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 13px;
+        }
+        
+        .table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 14px;
+            color: #4b5563;
+        }
+        
+        .table tr:hover td {
+            background: #f9fafb;
+        }
+        
+        /* Формы */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #374151;
+            font-size: 14px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #134D71;
+            box-shadow: 0 0 0 3px rgba(19, 77, 113, 0.1);
+        }
+        
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        /* Уведомления */
+        .alert {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+            border-radius: 12px;
+            padding: 14px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        /* Форма входа */
+        .login-card {
+            max-width: 400px;
+            margin: 80px auto;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-content {
+                padding: 20px;
+            }
+        }
+
+        /* Активная кнопка на главной */
+        .btn-active {
+            background: rgba(19, 77, 113, 0.5);
+            color: #134D71;
+            border: none;
+        }
+        
+        .btn-active:hover {
+            background: rgba(19, 77, 113, 0.6);
+        }
+
+        /* Убираем голубой фон у автозаполненных полей во всех формах админки */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active,
+        textarea:-webkit-autofill,
+        textarea:-webkit-autofill:hover,
+        textarea:-webkit-autofill:focus,
+        textarea:-webkit-autofill:active,
+        select:-webkit-autofill,
+        select:-webkit-autofill:hover,
+        select:-webkit-autofill:focus,
+        select:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 30px white inset !important;
+            box-shadow: 0 0 0 30px white inset !important;
+            background-color: white !important;
+            background: white !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-header">
+        <div class="admin-logo">🔐 Администратор</div>
+        <a href="/admin/logout" class="admin-logout">
+            <span>🚪</span> Выйти
+        </a>
+    </div>
+    <div class="admin-content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
+
