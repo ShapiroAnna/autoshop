@@ -36,7 +36,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # ===== НАСТРОЙКИ EMAIL =====
 app.config['MAIL_SERVER'] = 'smtp.timeweb.ru'
-app.config['MAIL_PORT'] = 465
+app.config['MAIL_PORT'] = 2525
 app.config['MAIL_USE_SSL'] = True
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USERNAME'] = 'zakaz@autoinomarki76.ru'
