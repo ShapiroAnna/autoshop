@@ -43,6 +43,10 @@ app.config['MAIL_USERNAME'] = 'autoinomarki@yandex.ru'
 app.config['MAIL_PASSWORD'] = 'ccjmqllppnrcklho'
 app.config['MAIL_DEFAULT_SENDER'] = 'autoinomarki@yandex.ru'
 
+# Добавьте таймауты для устойчивости
+app.config['MAIL_TIMEOUT'] = 30
+app.config['MAIL_MAX_EMAILS'] = None
+
 mail = Mail(app)
 
 db = SQLAlchemy(app)
@@ -167,8 +171,12 @@ def add_request():
 Время заявки: {datetime.now().strftime('%d.%m.%Y %H:%M')}
                 '''
                 
-                mail.send(msg)
-                print(f"Email отправлен на {recipients}")
+                try:
+                    mail.send(msg)
+                    print(f"✅ Email отправлен на {recipients}")
+                except Exception as mail_error:
+                    print(f"❌ Ошибка при отправке email: {mail_error}")
+                    # Не прерываем выполнение, просто логируем ошибку
             except Exception as e:
                 print(f"Ошибка отправки email: {e}")
     
