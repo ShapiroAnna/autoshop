@@ -37,6 +37,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # ===== НАСТРОЙКИ EMAIL =====
 app.config['MAIL_SERVER'] = 'smtp.yandex.ru'
 app.config['MAIL_PORT'] = 465
+app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 app.config['MAIL_USERNAME'] = 'autoinomarki@yandex.ru'
 app.config['MAIL_PASSWORD'] = 'ccjmqllppnrcklho'
