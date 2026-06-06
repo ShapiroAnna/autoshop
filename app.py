@@ -34,14 +34,14 @@ else:
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# ===== НАСТРОЙКИ EMAIL =====
-app.config['MAIL_SERVER'] = 'smtp.timeweb.ru'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USERNAME'] = 'zakaz@autoinomarki76.ru'
-app.config['MAIL_PASSWORD'] = 'zHaX3)F15^*k:4'
-app.config['MAIL_DEFAULT_SENDER'] = 'zakaz@autoinomarki76.ru'
+# ===== НАСТРОЙКИ EMAIL (SendGrid) =====
+app.config['MAIL_SERVER'] = 'smtp.sendgrid.net'          # SMTP-сервер SendGrid [citation:3][citation:6]
+app.config['MAIL_PORT'] = 587                            # Порт с шифрованием STARTTLS [citation:6]
+app.config['MAIL_USE_TLS'] = True                        # Включаем шифрование [citation:1]
+app.config['MAIL_USE_SSL'] = False                       # Отключаем SSL (используем TLS) [citation:1]
+app.config['MAIL_USERNAME'] = 'apikey'                   # Имя пользователя — всегда строка 'apikey' [citation:3][citation:6]
+app.config['MAIL_PASSWORD'] = 'EEHA7UCVDU4RMM4JERG9DHN6'  # ВАЖНО: вставьте ваш скопированный ключ!
+app.config['MAIL_DEFAULT_SENDER'] = 'autoinomarki@yandex.ru' # Адрес, от имени которого будут приходить письма
 
 app.config['MAIL_TIMEOUT'] = 30
 app.config['MAIL_MAX_EMAILS'] = None
