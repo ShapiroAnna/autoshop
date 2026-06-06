@@ -35,13 +35,13 @@ else:
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # ===== НАСТРОЙКИ EMAIL =====
-app.config['MAIL_SERVER'] = 'smtp.yandex.ru'
-app.config['MAIL_PORT'] = 587          # Изменен порт
-app.config['MAIL_USE_TLS'] = True      # Включен TLS
-app.config['MAIL_USE_SSL'] = False     # Выключен SSL (вместе с TLS)
-app.config['MAIL_USERNAME'] = 'autoinomarki@yandex.ru'
-app.config['MAIL_PASSWORD'] = 'ccjmqllppnrcklho'
-app.config['MAIL_DEFAULT_SENDER'] = 'autoinomarki@yandex.ru'
+app.config['MAIL_SERVER'] = 'smtp.timeweb.ru'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = 'zakaz@autoinomarki76.ru'  # Ваш ящик на Timeweb
+app.config['MAIL_PASSWORD'] = 'zHaX3)F15^*k:4'              # Пароль от этого ящика
+app.config['MAIL_DEFAULT_SENDER'] = 'zakaz@autoinomarki76.ru'
 
 # Добавьте таймауты для устойчивости
 app.config['MAIL_TIMEOUT'] = 30
