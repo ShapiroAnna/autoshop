@@ -153,6 +153,7 @@ def add_request():
                 extra_email = get_setting('manager_email_extra', '')
                 if extra_email:
                     recipients.append(extra_email)
+                
                 print("=== ДИАГНОСТИКА ПОЧТЫ ===")
                 print(f"MAIL_SERVER: {app.config['MAIL_SERVER']}")
                 print(f"MAIL_PORT: {app.config['MAIL_PORT']}")
@@ -161,7 +162,7 @@ def add_request():
                 print(f"MAIL_USE_TLS: {app.config['MAIL_USE_TLS']}")
                 print(f"recipients: {recipients}")
                 print("=========================")
-                
+
                 msg = Message(
                     subject='🔔 Новая заявка с сайта',
                     recipients=recipients
@@ -175,25 +176,18 @@ def add_request():
 🚗 Марка авто / VIN: {car_info}
 📋 Нужные запчасти: {parts_needed}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-'''
-
-# Московское время (UTC+3)
-moscow_tz = timezone(timedelta(hours=3))
-moscow_time = datetime.now(moscow_tz)
-Время заявки: {moscow_time.strftime('%d.%m.%Y %H:%M')}
-
+'''    
                 try:
                     mail.send(msg)
                     print(f"✅ Email отправлен на {recipients}")
                 except Exception as mail_error:
                     print(f"❌ Ошибка при отправке email: {mail_error}")
-                    print(f"Тип ошибки: {type(mail_error).__name__}")
                     import traceback
                     traceback.print_exc()
 
-     except Exception as e:
+            except Exception as e:
                 print(f"Ошибка подготовки письма: {e}")
-
+    
     flash('Спасибо, мы свяжемся с Вами!', 'success')
     return redirect(url_for('index'))
 
