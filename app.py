@@ -190,7 +190,10 @@ moscow_time = datetime.now(moscow_tz)
                     print(f"Тип ошибки: {type(mail_error).__name__}")
                     import traceback
                     traceback.print_exc()
-    
+
+     except Exception as e:
+                print(f"Ошибка подготовки письма: {e}")
+
     flash('Спасибо, мы свяжемся с Вами!', 'success')
     return redirect(url_for('index'))
 
