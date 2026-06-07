@@ -153,6 +153,14 @@ def add_request():
                 extra_email = get_setting('manager_email_extra', '')
                 if extra_email:
                     recipients.append(extra_email)
+                print("=== ДИАГНОСТИКА ПОЧТЫ ===")
+                print(f"MAIL_SERVER: {app.config['MAIL_SERVER']}")
+                print(f"MAIL_PORT: {app.config['MAIL_PORT']}")
+                print(f"MAIL_USERNAME: {app.config['MAIL_USERNAME']}")
+                print(f"MAIL_USE_SSL: {app.config['MAIL_USE_SSL']}")
+                print(f"MAIL_USE_TLS: {app.config['MAIL_USE_TLS']}")
+                print(f"recipients: {recipients}")
+                print("=========================")
                 
                 msg = Message(
                     subject='🔔 Новая заявка с сайта',
@@ -167,12 +175,13 @@ def add_request():
 🚗 Марка авто / VIN: {car_info}
 📋 Нужные запчасти: {parts_needed}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+'''
 
 # Московское время (UTC+3)
 moscow_tz = timezone(timedelta(hours=3))
 moscow_time = datetime.now(moscow_tz)
 Время заявки: {moscow_time.strftime('%d.%m.%Y %H:%M')}
-                
+
                 try:
                     mail.send(msg)
                     print(f"✅ Email отправлен на {recipients}")
