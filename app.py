@@ -168,7 +168,10 @@ def add_request():
 📋 Нужные запчасти: {parts_needed}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Время заявки: {datetime.now().strftime('%d.%m.%Y %H:%M')}
+# Московское время (UTC+3)
+moscow_tz = timezone(timedelta(hours=3))
+moscow_time = datetime.now(moscow_tz)
+Время заявки: {moscow_time.strftime('%d.%m.%Y %H:%M')}
                 '''
                 
                 try:
