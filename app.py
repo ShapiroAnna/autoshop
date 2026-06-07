@@ -187,9 +187,9 @@ moscow_time = datetime.now(moscow_tz)
                     print(f"✅ Email отправлен на {recipients}")
                 except Exception as mail_error:
                     print(f"❌ Ошибка при отправке email: {mail_error}")
-                    # Не прерываем выполнение, просто логируем ошибку
-            except Exception as e:
-                print(f"Ошибка отправки email: {e}")
+                    print(f"Тип ошибки: {type(mail_error).__name__}")
+                    import traceback
+                    traceback.print_exc()
     
     flash('Спасибо, мы свяжемся с Вами!', 'success')
     return redirect(url_for('index'))
