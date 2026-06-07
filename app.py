@@ -172,7 +172,6 @@ def add_request():
 moscow_tz = timezone(timedelta(hours=3))
 moscow_time = datetime.now(moscow_tz)
 Время заявки: {moscow_time.strftime('%d.%m.%Y %H:%M')}
-                '''
                 
                 try:
                     mail.send(msg)
