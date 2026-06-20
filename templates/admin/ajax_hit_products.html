@@ -172,21 +172,39 @@
         }
     }
     
-    /* Адаптация для очень маленьких телефонов */
-    @media (max-width: 480px) {
+    /* Мобильная версия (планшеты и телефоны) — увеличенные шрифты */
+    @media (max-width: 768px) {
         .product-order {
-            font-size: 13px;
-            min-width: 25px;
+            font-size: 15px;
+            min-width: 30px;
         }
         .product-name {
-            font-size: 13px;
-        }
-        .mobile-edit-btn {
             font-size: 16px;
         }
+        .mobile-edit-btn {
+            font-size: 20px;
+        }
         .mobile-delete-btn {
-            padding: 4px 6px;
-            font-size: 12px;
+            padding: 8px 10px;
+            font-size: 14px;
+        }
+    }
+    
+    /* Очень маленькие телефоны — чуть меньше, чтобы не вылезало */
+    @media (max-width: 480px) {
+        .product-order {
+            font-size: 14px;
+            min-width: 28px;
+        }
+        .product-name {
+            font-size: 15px;
+        }
+        .mobile-edit-btn {
+            font-size: 18px;
+        }
+        .mobile-delete-btn {
+            padding: 6px 8px;
+            font-size: 14px;
         }
     }
 </style>
