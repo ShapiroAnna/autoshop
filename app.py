@@ -241,8 +241,14 @@ def delete_request(id):
 def delete_all_requests():
     confirm = request.args.get('confirm', 'no')
     if confirm == 'yes':
+        # Удаляем все заявки
         Request.query.delete()
         db.session.commit()
+        
+        # Сбрасываем счётчик AUTO_INCREMENT
+        db.session.execute(db.text("ALTER TABLE requests AUTO_INCREMENT = 1"))
+        db.session.commit()
+        
     return redirect(url_for('admin_requests'))
 
 @app.route('/admin/requests')
