@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 import os
@@ -8,6 +8,10 @@ from flask import flash
 from datetime import datetime
 from flask_mail import Mail, Message
 from datetime import timezone, timedelta
+
+def moscow_now():
+    """Возвращает текущее московское время (UTC+3)"""
+    return datetime.now(timezone(timedelta(hours=3)))
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey123'
@@ -41,7 +45,7 @@ app.config['MAIL_PORT'] = 465
 app.config['MAIL_USE_SSL'] = True
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USERNAME'] = 'zakaz@autoinomarki76.ru'
-app.config['MAIL_PASSWORD'] = 'XbW@i5Wa>upt1A'
+app.config['MAIL_PASSWORD'] = 'zHaX3)F15^*k:4'
 app.config['MAIL_DEFAULT_SENDER'] = 'zakaz@autoinomarki76.ru'
 
 app.config['MAIL_TIMEOUT'] = 30
@@ -58,7 +62,7 @@ class Request(db.Model):
     phone = db.Column(db.String(50), nullable=False)
     car_info = db.Column(db.String(200), nullable=False)
     parts_needed = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.now)
+    created_at = db.Column(db.DateTime, default=moscow_now)
 
 class HitProduct(db.Model):
     __tablename__ = 'hit_products'
