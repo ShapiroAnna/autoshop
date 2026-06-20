@@ -45,7 +45,7 @@ app.config['MAIL_PORT'] = 465
 app.config['MAIL_USE_SSL'] = True
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USERNAME'] = 'zakaz@autoinomarki76.ru'
-app.config['MAIL_PASSWORD'] = 'zHaX3)F15^*k:4'
+app.config['MAIL_PASSWORD'] = 'XbW@i5Wa>upt1A'
 app.config['MAIL_DEFAULT_SENDER'] = 'zakaz@autoinomarki76.ru'
 
 app.config['MAIL_TIMEOUT'] = 30
