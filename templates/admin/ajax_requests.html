@@ -205,18 +205,31 @@
         text-decoration: none;
     }
     
+    /* Мобильная версия: увеличенные шрифты в деталях заявки */
     @media (max-width: 480px) {
         .request-details {
-            padding: 10px 12px;
+            padding: 14px 16px;
         }
         .detail-section {
-            margin-bottom: 10px;
+            margin-bottom: 14px;
         }
         .detail-label {
-            font-size: 11px;
+            font-size: 14px !important;
+            margin-bottom: 6px;
         }
         .detail-value {
-            font-size: 12px;
+            font-size: 15px !important;
+            line-height: 1.6;
+        }
+        /* Заголовок карточки */
+        .request-id {
+            font-size: 16px !important;
+        }
+        .request-car {
+            font-size: 16px !important;
+        }
+        .toggle-icon {
+            font-size: 18px !important;
         }
     }
 </style>
