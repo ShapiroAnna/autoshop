@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 import os
 import time
@@ -8,6 +8,7 @@ from flask import flash
 from datetime import datetime
 from flask_mail import Mail, Message
 from datetime import timezone, timedelta
+from dynamic_sitemap import FlaskSitemap
 
 def moscow_now():
     """Возвращает текущее московское время (UTC+3)"""
@@ -15,6 +16,22 @@ def moscow_now():
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey123'
+
+# ===== НАСТРОЙКА SITEMAP =====
+sitemap = FlaskSitemap(app, 'https://autoinomarki76.ru')
+sitemap.config.TIMEZONE = 'Europe/Moscow'
+sitemap.ignore('/admin', '/static', '/admin/login')
+
+# Добавляем главную страницу
+sitemap.add_items(
+    {'loc': '/', 'priority': 1.0, 'changefreq': 'daily'}
+)
+
+# Добавляем страницу с заявками (если она публичная — НЕТ, она в админке)
+# Добавляем страницу с карточками товаров (если она публичная — НЕТ, она в админке)
+
+# Строим карту сайта
+sitemap.build()
 
 # ===== НАСТРОЙКА БАЗЫ ДАННЫХ =====
 import urllib.parse
@@ -601,6 +618,11 @@ with app.app_context():
         print("✅ Таблицы базы данных созданы/проверены")
     except Exception as e:
         print(f"Ошибка при создании таблиц: {e}")
+
+@app.route('/sitemap.xml')
+def sitemap_xml():
+    """Отдаёт файл sitemap.xml"""
+    return send_from_directory('static', 'sitemap.xml', mimetype='application/xml')
 
 if __name__ == '__main__':
     app.run(debug=True)
