@@ -4,3 +4,4 @@ flask-mail
 pymysql
 cryptography
 gunicorn
+dynamic-sitemap
