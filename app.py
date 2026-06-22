@@ -624,5 +624,10 @@ def sitemap_xml():
     """Отдаёт файл sitemap.xml"""
     return send_from_directory('static', 'sitemap.xml', mimetype='application/xml')
 
+@app.route('/yandex_a61038694e07fbca.html')
+def yandex_verify():
+    """Файл для подтверждения прав в Яндекс Вебмастере"""
+    return send_from_directory('.', 'yandex_a61038694e07fbca.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
